@@ -10,6 +10,7 @@ class Button {
         this.x2 = x2
         this.y2 = y2
         this.pressed = false
+        this.visible = true
     }
 
 
@@ -54,7 +55,7 @@ function setup() {
 
 
     setupTiles()
-    createCanvas(500, 500)
+    createCanvas(windowWidth, windowHeight)
 
 
 
