@@ -3,29 +3,41 @@ class Button {
     fill color, x and y coordinates that
     will be used to initialize class properties.
     */
-    constructor(bColor, x, y, x2, y2) {
+    constructor(bColor, x, y, x2, y2, pressedColor) {
+        this.sizeX = x2 - x
+        this.sizeY = y2 - y
         this.color = bColor
+        this.pressedColor = pressedColor
         this.x = x
         this.y = y
         this.x2 = x2
         this.y2 = y2
         this.pressed = false
-        this.visible = true
+        buttons.push(this)
+        if (!this.pressedColor) {
+            this.pressedColor = this.color
+        }
     }
 
 
     display() {
-        fill(this.color)
-        rect(this.x, this.y, this.x2 - this.x, this.y2 - this.y)
+        this.checkClicked()
+        if (!this.pressed) {
+            fill(this.color)
+            rect(this.x, this.y, this.x2 - this.x, this.y2 - this.y)
+        } else {
+            fill(this.pressedColor)
+            rect(this.x + 3, this.y + 3, -2 + this.x2 - this.x, -2 + this.y2 - this.y)
+
+        }
+
     }
 
-    move() { // method!
-        this.x += this.speed
-            // Wrap x around boundaries
-        if (this.x < -20) {
-            this.x = width
-        } else if (this.x > width) {
-            this.x = -20
+    checkClicked() {
+        if (mouseIsPressed && mouseX > this.x && mouseX < this.x2 && mouseY > this.y && mouseY < this.y2) {
+            this.pressed = true
+        } else {
+            this.pressed = false
         }
     }
 }
@@ -51,7 +63,8 @@ function setupTiles() {
 }
 
 function setup() {
-    button1 = new Button("blue", 10, 10, 50, 50)
+    buttons = []
+    button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10, "red")
 
 
     setupTiles()
@@ -84,130 +97,137 @@ function setup() {
 
 
 function draw() {
-    if (!paused) { // unpaused behaviour
+    background(220)
 
-        input()
-        count = count + gameSpeed * deltaTime
-        if (count > 100) tick()
-            //if (checkTile(1,1,[0])) console.log("yeah")
-        strokeWeight(1)
-        frameRate(fr)
 
-        //tiles[0][((mouseTileY + offsetY) / TILESIZE).toFixed(0)] = 2;
-        //tiles[((mouseTileX - offsetX) / TILESIZE).toFixed(0)][0] = 2
+    input()
+    count = count + gameSpeed * deltaTime
+    if (count > 100) tick()
+        //if (checkTile(1,1,[0])) console.log("yeah")
+    strokeWeight(1)
+    frameRate(fr)
 
-        background(220)
-        startY = -1 * Math.floor(offsetY / TILESIZE) - 1
-        startX = -1 * Math.floor(offsetX / TILESIZE) - 1
-        stopY = Math.ceil(startY + height / TILESIZE) + 1
-        stopX = Math.ceil(startX + width / TILESIZE) + 1
+    //tiles[0][((mouseTileY + offsetY) / TILESIZE).toFixed(0)] = 2;
+    //tiles[((mouseTileX - offsetX) / TILESIZE).toFixed(0)][0] = 2
 
-        if (startY < 0) startY = 0
-        if (startX < 0) startX = 0
-        if (stopY >= HEIGHT) stopY = HEIGHT
-        if (stopX >= WIDTH) stopX = WIDTH
 
-        for (i = startX; i < stopX; i++) {
-            for (j = startY; j < stopY; j++) {
-                if (
-                    j + 1 > -1 * (offsetY / TILESIZE) &&
-                    j - 1 < -1 * (offsetY / TILESIZE) + height / TILESIZE &&
-                    i + 1 > -1 * (offsetX / TILESIZE) &&
-                    i - 1 < -1 * (offsetX / TILESIZE) + width / TILESIZE
-                ) {
-                    if (i == 0 || i == WIDTH - 1 || j == 0 || j == HEIGHT - 1) {
-                        tiles[i][j] = 2
-                    }
-                    switch (tiles[i][j]) {
-                        case 0: // blank
-                            c = color(255, 204, 0)
-                            break
-                        case 1: // blue
-                            c = color(0, 0, 255)
-                            break
-                        case 2: // border
-                            c = color(50, 50, 50)
-                            break
-                        case 3: // red
-                            c = color(255, 0, 0)
-                            break
-                        case 4: // green
-                            c = color(0, 255, 50)
-                            break
-                        case 5: // black
-                            c = color(0, 0, 0)
-                            break
-                        case 6: // sand
-                            c = color(200, 200, 20)
-                            break
-                        case 7: // explosion
-                            c = color(255, 0, 0)
-                            break
-                        case 8: // water
-                            c = color(0, 80, 255)
-                            break
-                        default:
-                            c = color(255, 90, 40)
-                    }
 
-                    if (tiles[i][j]) {
-                        strokeWeight(0)
-                        fill(c)
-                        rect(
-                            i * TILESIZE + offsetX,
-                            j * TILESIZE + offsetY,
-                            TILESIZE,
-                            TILESIZE
-                        )
-                    }
+    // -- tiles --
+    startY = -1 * Math.floor(offsetY / TILESIZE) - 1
+    startX = -1 * Math.floor(offsetX / TILESIZE) - 1
+    stopY = Math.ceil(startY + height / TILESIZE) + 1
+    stopX = Math.ceil(startX + width / TILESIZE) + 1
+
+    if (startY < 0) startY = 0
+    if (startX < 0) startX = 0
+    if (stopY >= HEIGHT) stopY = HEIGHT
+    if (stopX >= WIDTH) stopX = WIDTH
+
+    for (i = startX; i < stopX; i++) {
+        for (j = startY; j < stopY; j++) {
+            if (
+                j + 1 > -1 * (offsetY / TILESIZE) &&
+                j - 1 < -1 * (offsetY / TILESIZE) + height / TILESIZE &&
+                i + 1 > -1 * (offsetX / TILESIZE) &&
+                i - 1 < -1 * (offsetX / TILESIZE) + width / TILESIZE
+            ) {
+                if (i == 0 || i == WIDTH - 1 || j == 0 || j == HEIGHT - 1) {
+                    tiles[i][j] = 2
+                }
+                switch (tiles[i][j]) {
+                    case 0: // blank
+                        c = color(255, 204, 0)
+                        break
+                    case 1: // blue
+                        c = color(0, 0, 255)
+                        break
+                    case 2: // border
+                        c = color(50, 50, 50)
+                        break
+                    case 3: // red
+                        c = color(255, 0, 0)
+                        break
+                    case 4: // green
+                        c = color(0, 255, 50)
+                        break
+                    case 5: // black
+                        c = color(0, 0, 0)
+                        break
+                    case 6: // sand
+                        c = color(200, 200, 20)
+                        break
+                    case 7: // explosion
+                        c = color(255, 0, 0)
+                        break
+                    case 8: // water
+                        c = color(0, 80, 255)
+                        break
+                    default:
+                        c = color(255, 90, 40)
+                }
+
+                if (tiles[i][j]) {
+                    strokeWeight(0)
+                    fill(c)
+                    rect(
+                        i * TILESIZE + offsetX,
+                        j * TILESIZE + offsetY,
+                        TILESIZE,
+                        TILESIZE
+                    )
                 }
             }
         }
+    }
 
-        Smoothing = 0.9
+    Smoothing = 0.9
 
-        dt = dt * Smoothing + deltaTime * (1 - Smoothing)
-        fps = 1000 / dt
-        textPosX = 30
-        textPosY = 40
-        if (mouseTileX < 0) {
-            mouseTileX = 0
+    dt = dt * Smoothing + deltaTime * (1 - Smoothing)
+    fps = 1000 / dt
+    textPosX = 30
+    textPosY = 40
+    if (mouseTileX < 0) {
+        mouseTileX = 0
+
+    }
+    if (mouseTileX >= WIDTH) {
+        mouseTileX = WIDTH - 1
+    }
+    if (mouseTileY < 0) {
+        mouseTileY = 0
+    }
+    if (mouseTileY >= HEIGHT) {
+        mouseTileY = HEIGHT - 1
+    }
+
+
+    // -- UI --
+    if (tiles[mouseTileX][mouseTileY] || tiles[mouseTileX][mouseTileY] === 0) {
+        infoTile = tiles[mouseTileX][mouseTileY]
+    } else {
+        infoTile = "N/A"
+    }
+    strokeWeight(4)
+    info = `DT :  ${dt.toFixed(1)}\nFPS: ${fps.toFixed(
+		1
+	)}\nmousetile: ${mouseTileX} \n${mouseTileY}\n\n${infoTile}\nnext:${nextTiles[mouseTileX][mouseTileY]
+		}\noffset: ${offsetX}\n${offsetY}\ntilesize: ${TILESIZE}\nnewfps:${frameRate().toFixed(2)}\nstart:${startX},${startY}\nend:${stopX},${stopY}\n${count}\n${count2}\ngamespeed: ${gameSpeed}`
+    fill(0, 0, 0)
+
+    text(info, textPosX + 1, textPosY + 1)
+    info2 = ""
+    text(info2, 0, 50)
+    text(`${selectedTile}: ${tileTypes[selectedTile]}`, width - 100, 30)
+    strokeWeight(1)
+    fill(0, 255, 0)
+
+    text(info, textPosX, textPosY)
+    strokeWeight(0)
+    if (paused) { // paused behaviour
+        for (var a of buttons) {
+            a.display()
 
         }
-        if (mouseTileX >= WIDTH) {
-            mouseTileX = WIDTH - 1
-        }
-        if (mouseTileY < 0) {
-            mouseTileY = 0
-        }
-        if (mouseTileY >= HEIGHT) {
-            mouseTileY = HEIGHT - 1
-        }
-
-
-
-        if (tiles[mouseTileX][mouseTileY] || tiles[mouseTileX][mouseTileY] === 0) {
-            infoTile = tiles[mouseTileX][mouseTileY]
-        } else {
-            infoTile = "N/A"
-        }
-        strokeWeight(4)
-        info = `DT :  ${dt.toFixed(1)}\nFPS: ${fps.toFixed(
-			1
-		)}\nmousetile: ${mouseTileX} \n${mouseTileY}\n\n${infoTile}\nnext:${nextTiles[mouseTileX][mouseTileY]
-			}\noffset: ${offsetX}\n${offsetY}\ntilesize: ${TILESIZE}\nnewfps:${frameRate().toFixed(2)}\nstart:${startX},${startY}\nend:${stopX},${stopY}\n${count}\n${count2}\ngamespeed: ${gameSpeed}`
-        fill(0, 0, 0)
-
-        //text(info, textPosX + 1, textPosY + 1)
-        info2 = ""
-        text(info2, 0, 50)
-        text(`${selectedTile}: ${tileTypes[selectedTile]}`, width - 100, 30)
-        strokeWeight(1)
-        fill(0, 255, 0)
-            //text(info, textPosX, textPosY)
-        strokeWeight(0)
-    } else { // paused behaviour
-        button1.display()
     }
 }
 
@@ -229,8 +249,8 @@ function mouseWheel(event) {
 
 
     print(event.delta)
-        // prevents page scrolling
-    return false
+
+    return false // prevents page scrolling
 }
 
 function keyPressed() {
