@@ -3,7 +3,7 @@ class Button {
     fill color, x and y coordinates that
     will be used to initialize class properties.
     */
-    constructor(bColor, x, y, x2, y2,text, pressedColor) {
+    constructor(bColor, x, y, x2, y2,type, text, pressedColor) {
         this.sizeX = x2 - x
         this.sizeY = y2 - y
         this.color = bColor
@@ -14,6 +14,7 @@ class Button {
         this.y2 = y2
         this.pressed = false
 	this.text = text
+	this.type = type
         buttons.push(this)
         if (!this.pressedColor) {
             this.pressedColor = this.color
@@ -66,7 +67,8 @@ function setupTiles() {
 
 function setup() {
     buttons = []
-    button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10, "red")
+    button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10,"pause","test", "red")
+    button1 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5,"pause","test2", "pink")
 
 
     setupTiles()
@@ -227,7 +229,10 @@ function draw() {
     strokeWeight(0)
     if (paused) { // paused behaviour
         for (var a of buttons) {
+		if (a.type == "pause") {
             a.display()
+			
+		}
 
         }
     }
