@@ -102,6 +102,40 @@ function tick() {
                         }
                     }
                 }
+                else if (tiles[i][j] == 9) // bitOn
+                {                            // if any surrounding tile is not 9, set this tile to 10
+                            if (
+                                tiles[i - 1][j] != 9 ||
+                                tiles[i + 1][j] != 9 ||
+                                tiles[i][j - 1] != 9 ||
+                                tiles[i][j + 1] != 9
+                            ) {
+                                nextTiles[i][j] = 10
+                            }}
+                else if (tiles[i][j] == 10) // bitOff
+                {                             // if any surrounding tile is 9, set this tile to 9 as well
+                            if (
+                                tiles[i - 1][j] == 9 ||
+                                tiles[i + 1][j] == 9 ||
+                                tiles[i][j - 1] == 9 ||
+                                tiles[i][j + 1] == 9
+                            ) {
+                                nextTiles[i][j] = 9
+                            }}
+                else if (tiles[i][j] == 11) // bitFlip
+                {//if any surrounding tile is 9, set this tile to 10
+                            if (
+                                tiles[i - 1][j] == 9 ||
+                                tiles[i + 1][j] == 9 ||
+                                tiles[i][j - 1] ==  9 ||
+                                tiles[i][j + 1] == 9
+                            ) {
+                                nextTiles[i][j] = 10
+                            } else if (                                tiles[i - 1][j] == 10 ||
+                                tiles[i + 1][j] == 10 ||
+                                tiles[i][j - 1] ==  10 ||
+                                tiles[i][j + 1] == 10
+                            ) {nextTiles[i][j] = 9} else {nextTiles[i][j] = 10} }
             }
 
             if (count2 % 10 == 0) {
