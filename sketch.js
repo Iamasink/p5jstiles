@@ -45,6 +45,9 @@ class Button {
     }
 }
 
+
+
+
 function setupTiles() {
     WIDTH = 100
     HEIGHT = 100
@@ -54,6 +57,7 @@ function setupTiles() {
     offsetY = (HEIGHT * -TILESIZE) / 2
     offsetX = (WIDTH * -TILESIZE) / 2
     tiles[1][1] = 1
+    nextTiles[1][1] = 1
     tiles[WIDTH / 2][HEIGHT / 2] = 1
 
 
@@ -98,7 +102,34 @@ function setup() {
 
 }
 
+function checkTile(x,y,tile) {
+	console.log(`ct.. ${x},${y},, ${tile}`)
+	if (tiles[x][y]) {
+		console.log(`start ${x}, ${y}, ${tile}: true`)
+		return true}
+	else {
+		console.log(`start ${x}, ${y}, ${tile}: false`)
+		return false}
+}
 
+function countAdjacentTiles(x,y,tile) {
+	
+	let count = 0
+	if (checkTile(x+1,y,tile)) count++
+	if (checkTile(x,y+1,tile)) count++
+	if (checkTile(x-1,y,tile)) count++
+	if (checkTile(x,y-1,tile)) count++
+	console.log(`cat ${x}, ${y}, ${tile}: ${count}`)
+	return count
+}
+
+function checkAdjacentAdjacents(x,y,tile) {
+	if (countAdjacentTiles(x+1,y,tile) > 1) return true
+	else if (countAdjacentTiles(x-1,y,tile) > 1) return true
+	else if (countAdjacentTiles(x,y+1,tile) > 1) return true
+	else if (countAdjacentTiles(x,y-1,tile) > 1) return true
+	else return false
+}
 
 function draw() {
     background(220)
@@ -166,6 +197,15 @@ function draw() {
                     case 8: // water
                         c = color(0, 80, 255)
                         break
+                    case 9: // bitOn
+			c = color(50,0,0)	
+			break
+		case 10:
+			c = color(40,40,40)
+				break
+			case 11:
+				c = color (200,50,80)
+                    break
                     default:
                         c = color(255, 90, 40)
                 }
@@ -226,6 +266,10 @@ function draw() {
     fill(0, 255, 0)
 
     text(info, textPosX, textPosY)
+  
+  
+    info3 = `${mouseTileX},${mouseTileY}: ${checkTile(mouseTileX,mouseTileY,1)}`
+    text(info3,textPosX+50,textPosY+50)
     strokeWeight(0)
     if (paused) { // paused behaviour
         for (var a of buttons) {
@@ -264,6 +308,6 @@ function keyPressed() {
     if (keyCode === ESCAPE) {
         if (paused) { paused = false } else { paused = true }
     } else if (keyCode === RIGHT_ARROW) {
-        value = 0
+        console.log(checkTile(1,1,1))
     }
 }
