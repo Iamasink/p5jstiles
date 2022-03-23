@@ -3,7 +3,7 @@ class Button {
     fill color, x and y coordinates that
     will be used to initialize class properties.
     */
-    constructor(bColor, x, y, x2, y2, pressedColor) {
+    constructor(bColor, x, y, x2, y2,text, pressedColor) {
         this.sizeX = x2 - x
         this.sizeY = y2 - y
         this.color = bColor
@@ -13,6 +13,7 @@ class Button {
         this.x2 = x2
         this.y2 = y2
         this.pressed = false
+	this.text = text
         buttons.push(this)
         if (!this.pressedColor) {
             this.pressedColor = this.color
@@ -22,6 +23,7 @@ class Button {
 
     display() {
         this.checkClicked()
+	text(this.text, this.x + 5, this.y + (this.sizeY / 2));
         if (!this.pressed) {
             fill(this.color)
             rect(this.x, this.y, this.x2 - this.x, this.y2 - this.y)
