@@ -68,7 +68,7 @@ function setupTiles() {
 function setup() {
     buttons = []
     button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10,"pause","test", "red")
-    button1 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5,"pause","test2", "pink")
+    button2 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5,"pause","test2", "pink")
 
 
     setupTiles()
@@ -88,7 +88,7 @@ function setup() {
     mouseTileY = 0
     lastPosX = 0
     lastPosY = 0
-    tileTypes = ["blank", "blue", "border", "red", "green", "black", "sand", "explosion", "water"]
+    tileTypes = ["blank", "blue", "border", "red", "green", "black", "sand", "explosion", "water","bitOn","bitOff","bitFlip"]
     selectedTile = 0
     gameSpeed = 0
     paused = false
