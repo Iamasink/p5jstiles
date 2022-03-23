@@ -1,6 +1,3 @@
-
-
-
 function tick() {
     for (i = 1; i < WIDTH; i++) {
         for (j = 1; j < HEIGHT; j++) {
@@ -95,27 +92,29 @@ function tick() {
                             }
                         }
                     }
-                }
-                else if (tiles[i][j] == 9) // bitOn
-                {                            // if any surrounding tile is not 9, set this tile to 10
-                            if (checkAdjacentAdjacents(i,j,9) 
-                            ) {
-                                nextTiles[i][j] = 10
-                            }
-                }
-                else if (tiles[i][j] == 10) // bitOff
-                {                             // if any surrounding tile is 9, set this tile to 9 as well
-                            if (countAdjacentTiles(i,j,9) > 0) {
-                                nextTiles[i][j] = 9
-                            }
-                }
-                else if (tiles[i][j] == 11) // bitFlip
-                {//if any surrounding tile is 9, set this tile to 10
-                            if (countAdjacentTiles(i,j,9) > 0) {
-                                nextTiles[i][j] = 10
-                            } else if (countAdjacentTiles(i,j,10) > 10
-                            ) {nextTiles[i][j] = 9
-                              } else {nextTiles[i][j] = 10} 
+
+
+
+
+
+
+
+
+
+
+
+                } else if (tiles[i][j] == 9) // bitOn
+                { // if any surrounding tile is not 9, set this tile to 10
+                    if (countAdjacentTiles(i, j, 9) > 0) {
+                        nextTiles[i][j] = 10
+                    }
+                } else if (tiles[i][j] == 10) // bitFlip
+                { //if any surrounding tile is 9, set this tile to 10
+                    if (countAdjacentTiles(i, j, 9) > 0) {
+                        nextTiles[i][j] = 10
+                    } else if (countAdjacentTiles(i, j, 10) > 10) {
+                        nextTiles[i][j] = 9
+                    } else { nextTiles[i][j] = 10 }
                 }
             }
 

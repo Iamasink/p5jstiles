@@ -66,10 +66,10 @@ function input() {
         if (keyIsDown(53)) {
             //5
             if (!lock53) {
-                if (gameSpeed > 50) {
-                    gameSpeed = 0
+                if (rotation > 3) {
+                    rotation = 0
                 } else {
-                    gameSpeed += 5
+                    rotation += 1
                 }
 
                 lock53 = true
@@ -77,6 +77,19 @@ function input() {
         } else {
             lock53 = false
         }
+
+        // if r key pressed 
+        if (keyIsDown(82)) {
+            //r
+            if (!lock82) {
+                reset()
+                lock82 = true
+            }
+        } else {
+            lock82 = false
+        }
+
+
 
         if (mouseIsPressed) {
             if (
