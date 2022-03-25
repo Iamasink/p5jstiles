@@ -97,6 +97,7 @@ function setupTiles() {
     tiles[1][1] = 1
     nextTiles[1][1] = 1
     tiles[WIDTH / 2][HEIGHT / 2] = 1
+    rotation = 0
 
 
     for (i = 0; i < WIDTH - 1; i++) {
@@ -144,12 +145,12 @@ function setup() {
 }
 
 function checkTile(x, y, tile) {
-    console.log(`ct.. ${x},${y},, ${tile}`)
+    //console.log(`ct.. ${x},${y},, ${tile}`)
     if (tiles[x][y]) {
-        console.log(`start ${x}, ${y}, ${tile}: true`)
+        //console.log(`start ${x}, ${y}, ${tile}: true`)
         return true
     } else {
-        console.log(`start ${x}, ${y}, ${tile}: false`)
+        //console.log(`start ${x}, ${y}, ${tile}: false`)
         return false
     }
 }
@@ -306,7 +307,7 @@ function draw() {
     text(info, textPosX + 1, textPosY + 1)
     info2 = ""
     text(info2, 0, 50)
-    text(`${selectedTile}: ${tileTypes[selectedTile]}`, width - 100, 30)
+    text(`${selectedTile}: ${tileTypes[selectedTile]}\nrotation: ${rotation}`, width - 100, 30)
     strokeWeight(1)
     fill(0, 255, 0)
 

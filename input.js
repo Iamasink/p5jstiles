@@ -63,26 +63,33 @@ function input() {
             lock52 = false
         }
 
+
+        // if 5 key pressed incease game speed to a max of 10
         if (keyIsDown(53)) {
             //5
             if (!lock53) {
-                if (rotation > 3) {
-                    rotation = 0
+                if (gameSpeed < 10) {
+                    gameSpeed++
                 } else {
-                    rotation += 1
+                    gameSpeed = 0
                 }
-
                 lock53 = true
             }
         } else {
             lock53 = false
         }
 
+
+
         // if r key pressed 
         if (keyIsDown(82)) {
-            //r
             if (!lock82) {
-                reset()
+                if (rotation > 2) {
+                    rotation = 0
+                } else {
+                    rotation += 1
+                }
+
                 lock82 = true
             }
         } else {
