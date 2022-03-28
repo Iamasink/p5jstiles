@@ -64,6 +64,7 @@ class PinkTile extends Tile {
     }
 
     tick() {
+        console.log("pink ticked")
         this.color = color(255, 0, random(255))
     }
 }
@@ -115,6 +116,7 @@ function setup() {
     buttons = []
     button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10, "pause", "test", "red")
     button2 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5, "pause", "test2", "pink")
+
 
 
     setupTiles()
@@ -184,6 +186,7 @@ function draw() {
         //if (checkTile(1,1,[0])) console.log("yeah")
     strokeWeight(1)
     frameRate(fr)
+
 
     //tiles[0][((mouseTileY + offsetY) / TILESIZE).toFixed(0)] = 2;
     //tiles[((mouseTileX - offsetX) / TILESIZE).toFixed(0)][0] = 2
@@ -317,7 +320,7 @@ function draw() {
     info3 = `${mouseTileX},${mouseTileY}: ${checkTile(mouseTileX, mouseTileY, 1)}`
     text(info3, textPosX + 50, textPosY + 50)
     strokeWeight(0)
-    if (paused) { // paused behaviour
+    if (paused) {
         for (var a of buttons) {
             if (a.type == "pause") {
                 a.display()
