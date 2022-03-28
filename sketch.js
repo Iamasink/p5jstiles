@@ -83,6 +83,8 @@ class RotatableTile extends Tile {
     }
 }
 
+function setTile() {}
+
 
 
 
@@ -109,6 +111,8 @@ function setupTiles() {
     }
     tiles[1][1] = new Tile()
     tiles[2][1] = new PinkTile()
+    nextTiles[1][1] = new Tile()
+    nextTiles[2][1] = new PinkTile()
 
 }
 

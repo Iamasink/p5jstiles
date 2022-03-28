@@ -12,7 +12,7 @@ function tick() {
     for (i = 1; i < WIDTH - 2; i++) {
         for (j = 1; j < HEIGHT - 2; j++) {
 
-            tiles[i][j].tick()
+            if (tiles[i][j].type) tiles[i][j].tick()
             if (tiles[i][j]) {
                 switch (Math.floor(random(50))) {
                     case 0:
