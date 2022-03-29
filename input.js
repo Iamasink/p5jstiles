@@ -99,15 +99,7 @@ function input() {
 
 
         if (mouseIsPressed) {
-            if (
-                mouseTileX >= 0 &&
-                mouseTileY >= 0 &&
-                mouseTileX < WIDTH &&
-                mouseTileY < HEIGHT
-            ) {
-                tiles[mouseTileX][mouseTileY] = selectedTile
-                nextTiles[mouseTileX][mouseTileY] = selectedTile
-            }
+            setTile(mouseTileX, mouseTileY, new RedVirus())
         } else {}
 
 

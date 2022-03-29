@@ -46,49 +46,44 @@ class Button {
 }
 
 
-class Tile {
-    constructor() {
-        this.type = "tile"
-        this.color = color(255, 0, 0)
 
+
+
+
+
+function setTile(x,y,tile) {
+    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        tile.position.x = x
+        tile.position.y = y
+        tiles[x][y] = tile
+        nextTiles[x][y] = tile
+        return true
     }
-
-    tick() {}
-}
-
-class PinkTile extends Tile {
-    constructor() {
-        super()
-        this.type = "pink"
-        this.color = color(255, 0, 255)
-    }
-
-    tick() {
-        console.log("pink ticked")
-        this.color = color(255, 0, random(255))
+    else {
+        console.log(`failed to setTile: ${x}, ${y}, ${tile}. out of bounds`)
+        return false
     }
 }
 
-class RotatableTile extends Tile {
-    constructor(rotation) {
-        super()
-        this.type = "rotatable"
-        this.color = color(0, 255, 0)
-        this.rotation = rotation
-        this.rotatable = true
+function getTile(x,y) {
+    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        return tiles[x][y]
     }
-
-    tick() {
-
+    else {
+        console.log(`failed to getTile: ${x}, ${y}. out of bounds`)
+        return false
     }
 }
 
-function setTile() {}
+
 
 
 
 
 function setupTiles() {
+
+
+
     WIDTH = 100
     HEIGHT = 100
     TILESIZE = 10
@@ -109,10 +104,8 @@ function setupTiles() {
             nextTiles[i][j] = 0
         }
     }
-    tiles[1][1] = new Tile()
-    tiles[2][1] = new PinkTile()
-    nextTiles[1][1] = new Tile()
-    nextTiles[2][1] = new PinkTile()
+
+    setTile(1,1,new RedVirus())
 
 }
 
@@ -121,6 +114,13 @@ function setup() {
     button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10, "pause", "test", "red")
     button2 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5, "pause", "test2", "pink")
 
+    
+    darkMode = true;
+    if (darkMode) {
+        backgroundColor = 100
+    } else {
+        backgroundColor = 220
+    }
 
 
     setupTiles()
@@ -150,38 +150,11 @@ function setup() {
 
 }
 
-function checkTile(x, y, tile) {
-    //console.log(`ct.. ${x},${y},, ${tile}`)
-    if (tiles[x][y]) {
-        //console.log(`start ${x}, ${y}, ${tile}: true`)
-        return true
-    } else {
-        //console.log(`start ${x}, ${y}, ${tile}: false`)
-        return false
-    }
-}
 
-function countAdjacentTiles(x, y, tile) {
-
-    let count = 0
-    if (checkTile(x + 1, y, tile)) count++
-        if (checkTile(x, y + 1, tile)) count++
-            if (checkTile(x - 1, y, tile)) count++
-                if (checkTile(x, y - 1, tile)) count++
-                    console.log(`cat ${x}, ${y}, ${tile}: ${count}`)
-    return count
-}
-
-function checkAdjacentAdjacents(x, y, tile) {
-    if (countAdjacentTiles(x + 1, y, tile) > 1) return true
-    else if (countAdjacentTiles(x - 1, y, tile) > 1) return true
-    else if (countAdjacentTiles(x, y + 1, tile) > 1) return true
-    else if (countAdjacentTiles(x, y - 1, tile) > 1) return true
-    else return false
-}
 
 function draw() {
-    background(220)
+    background(backgroundColor)
+    
 
 
     input()
@@ -305,10 +278,17 @@ function draw() {
         infoTile = "N/A"
     }
     strokeWeight(4)
-    info = `DT :  ${dt.toFixed(1)}\nFPS: ${fps.toFixed(
-        1
-    )}\nmousetile: ${mouseTileX} \n${mouseTileY}\n\n${infoTile}\nnext:${nextTiles[mouseTileX][mouseTileY]
-        }\noffset: ${offsetX}\n${offsetY}\ntilesize: ${TILESIZE}\nnewfps:${frameRate().toFixed(2)}\nstart:${startX},${startY}\nend:${stopX},${stopY}\n${count}\n${count2}\ngamespeed: ${gameSpeed}`
+    info = `
+DT :  ${dt.toFixed(1)}\nFPS: ${fps.toFixed(1)}
+mousetile: ${mouseTileX},${mouseTileY}\n
+${mouseTileX},${mouseTileY}: ${String(getTile(mouseTileX, mouseTileY).type)}
+next:${nextTiles[mouseTileX][mouseTileY]}
+offset: ${offsetX}\n${offsetY}
+ilesize: ${TILESIZE}
+newfps:${frameRate().toFixed(2)}
+start:${startX},${startY}
+end:${stopX},${stopY}\n${count}\n${count2}
+gamespeed: ${gameSpeed}\n\\n${JSON.stringify(getTile(mouseTileX, mouseTileY))}`
     fill(0, 0, 0)
 
     text(info, textPosX + 1, textPosY + 1)
@@ -321,9 +301,11 @@ function draw() {
     text(info, textPosX, textPosY)
 
 
-    info3 = `${mouseTileX},${mouseTileY}: ${checkTile(mouseTileX, mouseTileY, 1)}`
+    info3 = ``
     text(info3, textPosX + 50, textPosY + 50)
     strokeWeight(0)
+
+
     if (paused) {
         for (var a of buttons) {
             if (a.type == "pause") {
