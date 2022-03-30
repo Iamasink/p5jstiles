@@ -282,6 +282,7 @@ function draw() {
 DT :  ${dt.toFixed(1)}\nFPS: ${fps.toFixed(1)}
 mousetile: ${mouseTileX},${mouseTileY}\n
 ${mouseTileX},${mouseTileY}: ${String(getTile(mouseTileX, mouseTileY).type)}
+${String(getTile(mouseTileX,mouseTileY).color)}
 next:${nextTiles[mouseTileX][mouseTileY]}
 offset: ${offsetX}\n${offsetY}
 ilesize: ${TILESIZE}
