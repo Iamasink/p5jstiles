@@ -51,25 +51,30 @@ class Button {
 
 
 
-function setTile(x,y,tile) {
+function setTile(x, y, tile) {
+    //console.log(`setting tile: ${x}, ${y}`)
     if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
         tile.position.x = x
         tile.position.y = y
         tiles[x][y] = tile
         nextTiles[x][y] = tile
         return true
-    }
-    else {
+    } else {
         console.log(`failed to setTile: ${x}, ${y}, ${tile}. out of bounds`)
         return false
     }
 }
 
-function getTile(x,y) {
+function killTile(x, y) {
+    tiles[x][y].kill()
+}
+
+function getTile(x, y) {
+    //console.log(`getting tile: ${x}, ${y}`)
     if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        //console.log(`returning tile: ${x}, ${y} = ${tiles[x][y].type}`)
         return tiles[x][y]
-    }
-    else {
+    } else {
         console.log(`failed to getTile: ${x}, ${y}. out of bounds`)
         return false
     }
@@ -88,24 +93,31 @@ function setupTiles() {
     HEIGHT = 100
     TILESIZE = 10
     tiles = Array.from(Array(WIDTH), () => new Array(HEIGHT))
-    tilesData = Array.from(Array(WIDTH), () => new Array(HEIGHT))
+    lifeNeighbours = Array.from(Array(WIDTH), () => new Array(HEIGHT))
     nextTiles = Array.from(Array(WIDTH), () => new Array(HEIGHT))
+
+
     offsetY = (HEIGHT * -TILESIZE) / 2
     offsetX = (WIDTH * -TILESIZE) / 2
-    tiles[1][1] = 1
-    nextTiles[1][1] = 1
-    tiles[WIDTH / 2][HEIGHT / 2] = 1
+    tiles[WIDTH / 2][HEIGHT / 2] = new PinkTile(WIDTH / 2, HEIGHT / 2)
     rotation = 0
 
 
-    for (i = 0; i < WIDTH - 1; i++) {
-        for (j = 0; j < HEIGHT - 1; j++) {
-            tiles[i][j] = 0
-            nextTiles[i][j] = 0
+    for (i = 0; i < WIDTH; i++) {
+        for (j = 0; j < HEIGHT; j++) {
+            if (i == 0 || i == WIDTH - 1 || j == 0 || j == HEIGHT - 1) {
+                setTile(i, j, new BorderTile())
+            } else {
+                setTile(i, j, new EmptyTile())
+            }
+            lifeNeighbours[i][j] = 0
+
         }
     }
 
-    setTile(1,1,new RedVirus())
+    setTile(1, 1, new RedVirus())
+
+
 
 }
 
@@ -114,7 +126,7 @@ function setup() {
     button1 = new Button("blue", width / 10, height / 10, 50 + width / 10, 50 + height / 10, "pause", "test", "red")
     button2 = new Button("red", width / 10, height / 5, 50 + width / 10, 50 + height / 5, "pause", "test2", "pink")
 
-    
+
     darkMode = true;
     if (darkMode) {
         backgroundColor = 100
@@ -140,8 +152,8 @@ function setup() {
     mouseTileY = 0
     lastPosX = 0
     lastPosY = 0
-    tileTypes = ["blank", "blue", "border", "red", "green", "black", "sand", "explosion", "water", "bitOn", "bitFlip"]
     selectedTile = 0
+    tileTypes = [PinkTile, BlueTile, RedVirus, BlueTile, Life, Sand, Water]
     gameSpeed = 0
     paused = false
     amountOfTileTypes = tileTypes.length - 1
@@ -154,7 +166,7 @@ function setup() {
 
 function draw() {
     background(backgroundColor)
-    
+
 
 
     input()
@@ -183,62 +195,20 @@ function draw() {
 
     for (i = startX; i < stopX; i++) {
         for (j = startY; j < stopY; j++) {
+            tile = getTile(i, j)
+
             if (
                 j + 1 > -1 * (offsetY / TILESIZE) &&
                 j - 1 < -1 * (offsetY / TILESIZE) + height / TILESIZE &&
                 i + 1 > -1 * (offsetX / TILESIZE) &&
                 i - 1 < -1 * (offsetX / TILESIZE) + width / TILESIZE
             ) {
-                if (i == 0 || i == WIDTH - 1 || j == 0 || j == HEIGHT - 1) {
-                    tiles[i][j] = 2
-                }
-                switch (tiles[i][j]) {
-                    case 0: // blank
-                        c = color(255, 204, 0)
-                        break
-                    case 1: // blue
-                        c = color(0, 0, 255)
-                        break
-                    case 2: // border
-                        c = color(50, 50, 50)
-                        break
-                    case 3: // red
-                        c = color(255, 0, 0)
-                        break
-                    case 4: // green
-                        c = color(0, 255, 50)
-                        break
-                    case 5: // black
-                        c = color(0, 0, 0)
-                        break
-                    case 6: // sand
-                        c = color(200, 200, 20)
-                        break
-                    case 7: // explosion
-                        c = color(255, 0, 0)
-                        break
-                    case 8: // water
-                        c = color(0, 80, 255)
-                        break
-                    case 9: // bitOn
-                        c = color(50, 0, 0)
-                        break
-                    case 10:
-                        c = color(40, 40, 40)
-                        break
-                    case 11:
-                        c = color(200, 50, 80)
-                        break
 
-                    default:
-                        c = color(255, 90, 40)
-                }
+                //console.log("bruh" + tile)
+                if (tile.type != "empty") {
 
-                if (tiles[i][j].type) { c = tiles[i][j].color }
-
-                if (tiles[i][j]) {
                     strokeWeight(0)
-                    fill(c)
+                    fill(tile.color)
                     rect(
                         i * TILESIZE + offsetX,
                         j * TILESIZE + offsetY,
@@ -289,7 +259,8 @@ ilesize: ${TILESIZE}
 newfps:${frameRate().toFixed(2)}
 start:${startX},${startY}
 end:${stopX},${stopY}\n${count}\n${count2}
-gamespeed: ${gameSpeed}\n\\n${JSON.stringify(getTile(mouseTileX, mouseTileY))}`
+gamespeed: ${gameSpeed}\n\\n${JSON.stringify(getTile(mouseTileX, mouseTileY))}
+lifeNeighbours: ${lifeNeighbours[mouseTileX][mouseTileY]}`
     fill(0, 0, 0)
 
     text(info, textPosX + 1, textPosY + 1)

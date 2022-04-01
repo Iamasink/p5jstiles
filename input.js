@@ -99,7 +99,7 @@ function input() {
 
 
         if (mouseIsPressed) {
-            setTile(mouseTileX, mouseTileY, new RedVirus())
+            setTile(mouseTileX, mouseTileY, new tileTypes[selectedTile])
         } else {}
 
 
