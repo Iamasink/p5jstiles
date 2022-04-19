@@ -63,12 +63,11 @@ function input() {
             lock52 = false
         }
 
-
-        // if 5 key pressed incease game speed to a max of 10
+        // if 5 key pressed incease game speed to a max of 3
         if (keyIsDown(53)) {
             //5
             if (!lock53) {
-                if (gameSpeed < 10) {
+                if (gameSpeed < 5) {
                     gameSpeed++
                 } else {
                     gameSpeed = 0
@@ -78,6 +77,22 @@ function input() {
         } else {
             lock53 = false
         }
+
+        // if 6 key pressed
+        if (keyIsDown(54)) {
+            //6
+            if (!lock54) {
+                if (debugEnabled) {
+                    debugEnabled = false
+                } else {
+                    debugEnabled = true
+                }
+                lock54 = true
+            }
+        } else {
+            lock54 = false
+        }
+
 
 
 
@@ -96,11 +111,30 @@ function input() {
             lock82 = false
         }
 
+        // if p key pressed
+        if (keyIsDown(80)) {
+            if (!lock80) {
+                // fill entire grid with pinkTile
+                for (let x = 0; x < WIDTH; x++) {
+                    for (let y = 0; y < HEIGHT; y++) {
+                        setTile(x, y, new PinkTile)
+                    }
+                }
+
+                lock80 = true
+            }
+        } else {
+            lock80 = false
+        }
+
 
 
         if (mouseIsPressed) {
-            setTile(mouseTileX, mouseTileY, new tileTypes[selectedTile])
-        } else {}
+            setTile(mouseTileX, mouseTileY, new tileTypes[selectedTile]())
+            // console.log(JSON.stringify(pauseMenu))
+        }
+
+
 
 
 
@@ -124,5 +158,33 @@ function input() {
                 }
             }
         }
+    }
+    // always
+    if (mouseIsPressed) {
+        if (mouseDown == false) {
+            mouseDownPosX = mouseX
+            mouseDownPosY = mouseY
+            //console.log(`mouseDownPos: ${mouseDownPosX},${mouseDownPosY}`)
+            mouseDown = true
+        }
+
+    } else {
+        if (mouseDown) {
+            mouseUpPosX = mouseX
+            mouseUpPosY = mouseY
+            //console.log(`mouseUpPos: ${mouseUpPosX},${mouseUpPosY}`)
+            mouseDown = false
+
+        }
+    }
+
+
+
+}
+function keyPressed() {
+    if (keyCode === ESCAPE) {
+        togglePauseMenu()
+    } else if (keyCode === RIGHT_ARROW) {
+        console.log(checkTile(1, 1, 1))
     }
 }
